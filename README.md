@@ -3,6 +3,7 @@ This plugin is a fork of Cosmyc's updated version of Jedcore which ports the plu
 
 This version of JedCore was designed to work with our fork of Project Korra and may not work with the official release builds of Project Korra. Use it at your own risk.
 
+Original README:
 # JedCore
 This is my fork of plushmonkey's fork of jedk1's JedCore addon for ProjectKorra.  
 Download releases [here](https://github.com/CozmycDev/JedCore/releases).
