@@ -1,6 +1,7 @@
-[![GitHub Pre-Release](https://img.shields.io/github/release-pre/CozmycDev/JedCore.svg)](https://github.com/CozmycDev/JedCore/releases)
-[![Github All Releases](https://img.shields.io/github/downloads/CozmycDev/JedCore/total.svg)](https://github.com/CozmycDev/JedCore/releases)
-![Size](https://img.shields.io/github/repo-size/CozmycDev/JedCore.svg)
+# Overview
+This plugin is a fork of Cosmyc's updated version of Jedcore which ports the plugin to the Paper API, removes abilities that have been made redundant (as they've been added to base Project Korra), and adds new abilities either ported from other addons that are no longer maintained (such as Metal Cables) or other entirely new abilities added by the TBMC Dev team.
+
+This version of JedCore was designed to work with our fork of Project Korra and may not work with the official release builds of Project Korra. Use it at your own risk.
 
 # JedCore
 This is my fork of plushmonkey's fork of jedk1's JedCore addon for ProjectKorra.  
