@@ -21,15 +21,15 @@ public class ThrownEntityTracker {
 	private final Entity entity;
 	private final Player instigator;
 	private Vector thisVelocity;
-	private Ability ability;
+	private final Ability ability;
 
 	public ThrownEntityTracker(Ability ability, Entity e, Player instigator, long delay) {
+		this.ability = ability;
 		entity = e;
 		this.instigator = instigator;
 		fireTime = System.currentTimeMillis();
 		this.delay = delay;
 		thisVelocity = e.getVelocity();
-		this.delay = delay;
 		instances.put(entity, this);
 	}
 
@@ -67,11 +67,14 @@ public class ThrownEntityTracker {
 
 	public static void updateAll() {
 		for (Entity entity : instances.keySet()) {
-			if (entity == null) {
+			if (!entity.isValid()) {
 				instances.remove(entity);
 				continue;
 			}
-			instances.get(entity).update();
+			ThrownEntityTracker tracker = instances.get(entity);
+			if (tracker != null) {
+				tracker.update();
+			}
 		}
 	}
 

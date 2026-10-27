@@ -141,7 +141,7 @@ public class JCListener implements Listener {
 					if (Backstab.punch((Player) event.getDamager(), (LivingEntity) event.getEntity())) {
 						event.setCancelled(true);
 						double damage = Backstab.getDamage(event.getDamager().getWorld());
-						DamageHandler.damageEntity(event.getEntity(), (Player) event.getDamager(), damage, CoreAbility.getAbility("BackStab"));
+						DamageHandler.damageEntity(event.getEntity(), (Player) event.getDamager(), damage, CoreAbility.getAbility(Backstab.class));
 						return;
 					}
 				}
