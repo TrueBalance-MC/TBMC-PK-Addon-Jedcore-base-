@@ -5,9 +5,10 @@ import com.jedk1.jedcore.configuration.JedCoreConfig;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.WaterAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
-import com.projectkorra.projectkorra.util.BlockSource;
-import com.projectkorra.projectkorra.util.ClickType;
+import com.projectkorra.projectkorra.region.RegionProtection;
+import com.projectkorra.projectkorra.util.TempBlock;
 
+import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -16,6 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ public class WakeFishing extends WaterAbility implements AddonAbility {
 	private final static Material[] FISH_TYPES = {
 			Material.COD, Material.PUFFERFISH, Material.TROPICAL_FISH, Material.SALMON
 	};
+
+	// How far (in blocks) the player's line of sight can drift from the focused block before the ability stops.
+	private static final double FOCUS_TOLERANCE = 1.5;
 
 	private Block focusedBlock;
 	private Location location;
@@ -71,18 +76,55 @@ public class WakeFishing extends WaterAbility implements AddonAbility {
 	}
 
 	private boolean prepare() {
-		Block block = BlockSource.getWaterSourceBlock(player, range, ClickType.SHIFT_DOWN, true, false, false);
-		if (isWater(block)) {
-			focusedBlock = block;
-			location = focusedBlock.getLocation();
-			return true;
+		Block block = getTargetedWater();
+		if (block == null) {
+			return false;
 		}
-		return false;
+		focusedBlock = block;
+		location = focusedBlock.getLocation();
+		return true;
 	}
 
+	/**
+	 * Finds the water the player is looking at. PK's generic water sourcing also accepts ice, snow and plants (and
+	 * caches whatever it found), so standing on ice or looking past shoreline plants would select the wrong block.
+	 */
+	private Block getTargetedWater() {
+		Location eye = player.getEyeLocation();
+		RayTraceResult result = player.getWorld().rayTraceBlocks(eye, eye.getDirection(), range, FluidCollisionMode.ALWAYS, true);
+		if (result == null || result.getHitBlock() == null) {
+			return null;
+		}
+
+		Block block = result.getHitBlock();
+		if (!isWater(block) || (TempBlock.isTempBlock(block) && !isBendableWaterTempBlock(block))) {
+			return null;
+		}
+		if (RegionProtection.isRegionProtected(this, block.getLocation())) {
+			return null;
+		}
+		return block;
+	}
+
+	/**
+	 * The player stays focused while they keep looking roughly at the focused block, so small head movements don't
+	 * cancel the ability (and put it on cooldown).
+	 */
 	private boolean isFocused() {
-		Block block = BlockSource.getWaterSourceBlock(player, range, ClickType.SHIFT_DOWN, true, false, false);
-		return block != null && block.equals(focusedBlock);
+		if (!isWater(focusedBlock)) {
+			return false;
+		}
+
+		Location eye = player.getEyeLocation();
+		Vector direction = eye.getDirection();
+		Vector toBlock = focusedBlock.getLocation().add(0.5, 0.5, 0.5).toVector().subtract(eye.toVector());
+		double along = toBlock.dot(direction);
+		if (along < 0 || along > range + 1) {
+			return false;
+		}
+
+		Vector offset = toBlock.subtract(direction.multiply(along));
+		return offset.lengthSquared() <= FOCUS_TOLERANCE * FOCUS_TOLERANCE;
 	}
 
 	@Override
