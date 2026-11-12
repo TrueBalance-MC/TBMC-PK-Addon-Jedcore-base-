@@ -43,8 +43,10 @@ public class EarthKick extends EarthAbility implements AddonAbility {
 	private Location location;
 	private Block block;
 	private boolean multipleHits;
+	@Attribute(Attribute.SELECT_RANGE)
 	private int sourceRange;
 	private int spread;
+	@Attribute(Attribute.SPEED)
 	private double velocity;
 	private boolean allowMetal;
 	private boolean replaceSource;
@@ -68,6 +70,7 @@ public class EarthKick extends EarthAbility implements AddonAbility {
 		}
 
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is selected and the blocks launched
 
 		location = player.getLocation();
 

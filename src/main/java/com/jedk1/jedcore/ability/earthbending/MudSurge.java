@@ -47,6 +47,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MudSurge extends EarthAbility implements AddonAbility {
+	@Attribute(Attribute.SELECT_RANGE)
 	private int prepareRange;
 	private int blindChance;
 	private int blindTicks;
@@ -54,6 +55,7 @@ public class MudSurge extends EarthAbility implements AddonAbility {
 	@Attribute(Attribute.DAMAGE)
 	private double damage;
 	private int waves;
+	@Attribute(Attribute.RADIUS)
 	private int waterSearchRadius;
 	private boolean wetSource;
 	@Attribute(Attribute.COOLDOWN)
@@ -124,6 +126,7 @@ public class MudSurge extends EarthAbility implements AddonAbility {
 		);
 		
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is searched for
 
 		if (getSource()) {
 			start();
@@ -407,7 +410,7 @@ public class MudSurge extends EarthAbility implements AddonAbility {
 						blind.add((Player) e);
 					}
 
-					e.setVelocity(fb.getVelocity().multiply(0.8));
+					GeneralMethods.setVelocity(this, e, fb.getVelocity().multiply(0.8));
 					tfb.remove();
 				}
 			}

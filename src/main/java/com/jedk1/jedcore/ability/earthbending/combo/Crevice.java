@@ -19,6 +19,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -250,7 +251,7 @@ public class Crevice extends EarthAbility implements AddonAbility, ComboAbility 
 			}
 
 			for (Entity entity : GeneralMethods.getEntitiesAroundPoint(tempLoc, 1)) {
-				entity.setVelocity(new Vector(0, -0.75, 0));
+				pushEntity(entity, new Vector(0, -0.75, 0));
 			}
 
 
@@ -263,13 +264,24 @@ public class Crevice extends EarthAbility implements AddonAbility, ComboAbility 
 		columns.add(blocks);
 	}
 
+	/**
+	 * Living entities are moved through ProjectKorra so knockback resistance applies; anything else is moved directly
+	 */
+	private void pushEntity(Entity entity, Vector velocity) {
+		if (entity instanceof LivingEntity) {
+			GeneralMethods.setVelocity(this, entity, velocity);
+		} else {
+			entity.setVelocity(velocity);
+		}
+	}
+
 	private void prepareRevert() {
 		for (int i = 0; i < columns.size(); ++i) {
 			List<TempBlock> tbs = columns.get(i);
 			for (TempBlock tb : tbs) {
 				tb.revertBlock();
 				for (Entity entity : GeneralMethods.getEntitiesAroundPoint(tb.getLocation(), 1)) {
-					entity.setVelocity(new Vector(0, 0.7, 0));
+					pushEntity(entity, new Vector(0, 0.7, 0));
 				}
 				new RegenTempBlock(tb.getBlock(), Material.AIR, Material.AIR.createBlockData(), i * 50L);
 			}

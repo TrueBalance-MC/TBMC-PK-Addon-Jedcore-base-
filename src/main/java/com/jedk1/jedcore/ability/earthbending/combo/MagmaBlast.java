@@ -48,9 +48,11 @@ public class MagmaBlast extends LavaAbility implements AddonAbility, ComboAbilit
 	private final List<TempBlock> blocks = new ArrayList<>();
 	private final List<TempFallingBlock> firedBlocks = new ArrayList<>();
 
+	@Attribute(Attribute.SPEED)
 	private double fireSpeed;
 	// How far away the player is allowed to be from the sources before the ability is destroyed.
 	private double maxDistanceFromSources;
+	@Attribute(Attribute.RADIUS)
 	private float explosionRadius = 2.0f;
 	// This will destroy the instance if LavaFlow is on cooldown.
 	private boolean requireLavaFlow;
@@ -79,6 +81,7 @@ public class MagmaBlast extends LavaAbility implements AddonAbility, ComboAbilit
 	public MagmaBlast(Player player) {
 		super(player);
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the sources are searched for
 
 		if (!bPlayer.canBendIgnoreBinds(this)) {
 			return;

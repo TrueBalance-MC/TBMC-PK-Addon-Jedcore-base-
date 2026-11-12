@@ -35,6 +35,7 @@ public class Bloodbending extends BloodAbility implements AddonAbility {
 	private boolean bloodbendingThroughBlocks;
 	private boolean requireBound;
 	private boolean affectBloodbenders;
+	@Attribute(Attribute.SELECT_RANGE)
 	private int distance;
 	@Attribute(Attribute.DURATION)
 	private long holdTime;
@@ -52,6 +53,7 @@ public class Bloodbending extends BloodAbility implements AddonAbility {
 			return;
 		}
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the hold time and grab range are used
 		time = System.currentTimeMillis() + holdTime;
 		if (grab()) {
 			start();
@@ -92,7 +94,7 @@ public class Bloodbending extends BloodAbility implements AddonAbility {
 		if (Arrays.asList(ElementalAbility.getTransparentMaterials()).contains(player.getEyeLocation().getBlock().getType())) {
 			Vector direction = GeneralMethods.getDirection(player.getEyeLocation(), GeneralMethods.getTargetedLocation(player, 20, ElementalAbility.getTransparentMaterials())).normalize().multiply(3);
 			if (!victim.isDead()) {
-				victim.setVelocity(direction);
+				GeneralMethods.setVelocity(this, victim, direction);
 
 				new HorizontalVelocityTracker(victim, player, 200L, this);
 				new ThrownEntityTracker(this, victim, player, 200L);
@@ -217,9 +219,9 @@ public class Bloodbending extends BloodAbility implements AddonAbility {
 		double distance = loc.distance(oldLocation);
 		Vector v = GeneralMethods.getDirection(oldLocation, GeneralMethods.getTargetedLocation(player, 10));
 		if (distance > 1.2D) {
-			victim.setVelocity(v.normalize().multiply(0.8D));
+			GeneralMethods.setVelocity(this, victim, v.normalize().multiply(0.8D));
 		} else {
-			victim.setVelocity(new Vector(0, 0, 0));
+			GeneralMethods.setVelocity(this, victim, new Vector(0, 0, 0));
 		}
 		victim.setFallDistance(0.0F);
 		if (victim instanceof Creature) {

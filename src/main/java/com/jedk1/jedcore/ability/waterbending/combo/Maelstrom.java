@@ -22,6 +22,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -165,7 +166,11 @@ public class Maelstrom extends WaterAbility implements AddonAbility, ComboAbilit
 				Location l = b.getLocation();
 				for(Entity entity : GeneralMethods.getEntitiesAroundPoint(l, 1.5D)){
 					Vector direction = GeneralMethods.getDirection(entity.getLocation(), origin.clone().subtract(-0.5, (levelStep - 1), -0.5));
-					entity.setVelocity(direction.multiply(0.2));
+					if (entity instanceof LivingEntity) {
+						GeneralMethods.setVelocity(this, entity, direction.multiply(0.2));
+					} else {
+						entity.setVelocity(direction.multiply(0.2));
+					}
 				}
 			}
 		}

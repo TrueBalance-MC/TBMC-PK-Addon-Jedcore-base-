@@ -48,6 +48,7 @@ public class IceWall extends IceAbility implements AddonAbility {
 
 	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute(Attribute.RADIUS)
 	private double damageRadius;
 
 	@Attribute(Attribute.COOLDOWN)

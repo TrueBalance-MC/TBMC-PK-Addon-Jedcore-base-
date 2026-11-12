@@ -81,6 +81,7 @@ public class Drain extends WaterAbility implements AddonAbility {
 			return;
 		}
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the duration is used
 		this.usePlants = bPlayer.canPlantbend();
 		endTime = System.currentTimeMillis() + duration;
 		if (!canFill()) {

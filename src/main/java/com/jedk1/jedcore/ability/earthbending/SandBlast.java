@@ -72,6 +72,7 @@ public class SandBlast extends SandAbility implements AddonAbility {
 		}
 
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is selected
 		if (prepare()) {
 			start();
 		}

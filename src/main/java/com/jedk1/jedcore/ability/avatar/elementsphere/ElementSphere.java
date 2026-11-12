@@ -234,7 +234,7 @@ public class ElementSphere extends AvatarAbility implements AddonAbility, MultiA
 	private void handleEntityPush() {
 		for (Entity entity : GeneralMethods.getEntitiesAroundPoint(location, 2.5)) {
 			if (isPushableEntity(entity)) {
-				entity.setVelocity(entity.getLocation().toVector().subtract(player.getLocation().toVector()).multiply(1));
+				GeneralMethods.setVelocity(this, entity, entity.getLocation().toVector().subtract(player.getLocation().toVector()).multiply(1));
 			}
 		}
 	}

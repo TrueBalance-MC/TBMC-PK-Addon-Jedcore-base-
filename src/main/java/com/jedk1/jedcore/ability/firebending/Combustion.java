@@ -45,6 +45,13 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 	private Location location;
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	// Loaded here rather than in the states so attribute modifiers (e.g. jing) apply to them
+	@Attribute(Attribute.CHARGE_DURATION)
+	private long warmup;
+	@Attribute(Attribute.SPEED)
+	private double speed;
+	@Attribute(Attribute.FIRE_TICK)
+	private int fireTick;
 	private CompositeRemovalPolicy removalPolicy;
 
 	private ArrayList<String> skipMaterials; // use a configured list of blocks to skip through
@@ -73,6 +80,9 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 		ConfigurationSection config = JedCoreConfig.getConfig(this.player);
 
 		cooldown = config.getLong("Abilities.Fire.Combustion.Cooldown");
+		warmup = config.getLong("Abilities.Fire.Combustion.Warmup");
+		speed = config.getDouble("Abilities.Fire.Combustion.Speed");
+		fireTick = config.getInt("Abilities.Fire.Combustion.FireTick");
 
 		this.location = null;
 		this.state = new ChargeState();
@@ -217,7 +227,6 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 	private class ChargeState implements State {
 		private final long startTime;
 		private int currPoint = (int) player.getLocation().getYaw() + 90;
-		private final long warmup;
 		private final double playerStartHealth;
 		private final boolean instantExplodeIfHit;
 
@@ -228,14 +237,13 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 			ConfigurationSection config = JedCoreConfig.getConfig(player);
 
 			this.instantExplodeIfHit = config.getBoolean("Abilities.Fire.Combustion.InstantExplodeIfHit");
-			this.warmup = config.getLong("Abilities.Fire.Combustion.Warmup");
 		}
 
 		@Override
 		public void update() {
 			long time = System.currentTimeMillis();
 
-			boolean charged = time >= this.startTime + warmup;
+			boolean charged = time >= this.startTime + Combustion.this.warmup;
 
 			if (player.isSneaking()) {
 				if (!bPlayer.canBendIgnoreBinds(Combustion.this)) {
@@ -306,7 +314,7 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 			ConfigurationSection config = JedCoreConfig.getConfig(player);
 
 			range = config.getInt("Abilities.Fire.Combustion.Range");
-			speed = config.getDouble("Abilities.Fire.Combustion.Speed");
+			speed = Combustion.this.speed;
 			explodeOnDeath = config.getBoolean("Abilities.Fire.Combustion.ExplodeOnDeath");
 			entityCollisionRadius = config.getDouble("Abilities.Fire.Combustion.EntityCollisionRadius");
 
@@ -432,7 +440,7 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 			this.waitForRegen = config.getBoolean("Abilities.Fire.Combustion.WaitForRegen");
 
 			double damage = config.getDouble("Abilities.Fire.Combustion.Damage");
-			int fireTick = config.getInt("Abilities.Fire.Combustion.FireTick");
+			int fireTick = Combustion.this.fireTick;
 			int power = config.getInt("Abilities.Fire.Combustion.Power");
 			boolean damageBlocks = config.getBoolean("Abilities.Fire.Combustion.DamageBlocks");
 			boolean regenBlocks = config.getBoolean("Abilities.Fire.Combustion.RegenBlocks");

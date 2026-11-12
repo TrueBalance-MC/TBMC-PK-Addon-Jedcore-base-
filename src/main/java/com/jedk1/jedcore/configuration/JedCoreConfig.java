@@ -950,8 +950,6 @@ public class JedCoreConfig {
 		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.Size.FullmoonLarge", 3);
 		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.IsAvatarStateToggle", true);
 		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.AvatarStateDuration", 60000);
-		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.PlayerStayNearSource", true);
-		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.MaxDistanceFromSource", 100);
 		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.FullMoon.Enabled", true);
 		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.FullMoon.Modifier.Cooldown", 3);
 		config.addDefault("Abilities.Water.WaterCombo.WaterFlow.FullMoon.Modifier.Duration", 2);
@@ -1039,6 +1037,10 @@ public class JedCoreConfig {
 		if (fireBreathDescription.contains("breath of color")) {
 			config.set("Abilities.Fire.FireBreath.Description", config.getDefaults().getString("Abilities.Fire.FireBreath.Description"));
 		}
+
+		// WaterFlow no longer has a maximum distance from its source.
+		config.set("Abilities.Water.WaterCombo.WaterFlow.PlayerStayNearSource", null);
+		config.set("Abilities.Water.WaterCombo.WaterFlow.MaxDistanceFromSource", null);
 	}
 
 	private void addDeathMessages() {

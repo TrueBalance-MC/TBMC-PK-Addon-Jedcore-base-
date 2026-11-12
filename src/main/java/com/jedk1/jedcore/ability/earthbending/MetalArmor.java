@@ -5,6 +5,7 @@ import com.jedk1.jedcore.configuration.JedCoreConfig;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.earthbending.EarthArmor;
 import com.projectkorra.projectkorra.util.TempArmor;
 import com.projectkorra.projectkorra.util.TempPotionEffect;
@@ -29,6 +30,7 @@ public class MetalArmor extends EarthAbility implements AddonAbility {
 
 	private boolean useIronArmor;
 	private int resistStrength;
+	@Attribute(Attribute.DURATION)
 	private int resistDuration;
 
 	public MetalArmor(Player player) {

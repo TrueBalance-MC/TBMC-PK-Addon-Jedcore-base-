@@ -49,6 +49,7 @@ public class MetalFragments extends MetalAbility implements AddonAbility {
 	private double damage;
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute(Attribute.SPEED)
 	private double velocity;
 
 	public List<Block> sources = new ArrayList<>();
@@ -70,6 +71,7 @@ public class MetalFragments extends MetalAbility implements AddonAbility {
 		}
 		
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is selected
 
 		if (tblockTracker.size() >= maxSources) {
 			return;

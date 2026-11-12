@@ -91,6 +91,7 @@ public class WaterGimbal extends WaterAbility implements AddonAbility, ComboAbil
 			return;
 		}
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is selected
 		usingBottle = false;
 		if (grabSource()) {
 			start();

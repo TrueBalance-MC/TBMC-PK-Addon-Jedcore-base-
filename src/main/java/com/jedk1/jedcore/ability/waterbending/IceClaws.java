@@ -38,6 +38,7 @@ public class IceClaws extends IceAbility implements AddonAbility {
 	@Attribute(Attribute.RANGE)
 	private double range;
 	private boolean throwable;
+	@Attribute(Attribute.SPEED)
 	private double throwSpeed;
 	private boolean applyCooldownOnThrow;
 

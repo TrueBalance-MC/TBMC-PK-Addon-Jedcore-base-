@@ -59,6 +59,7 @@ public class MetalShred extends MetalAbility implements AddonAbility {
 		}
 
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is selected
 
 		if (selectSource()) {
 			if (horizontal) {

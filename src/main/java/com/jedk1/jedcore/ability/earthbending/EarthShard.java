@@ -59,10 +59,12 @@ public class EarthShard extends EarthAbility implements AddonAbility {
 
 	private boolean allowKnockup;
 	private double knockupVelocity;
+	@Attribute(Attribute.RADIUS)
 	private double knockupRange;
 
 	private boolean allowKnockupSelf;
 	private double knockupSelfVelocity;
+	@Attribute(Attribute.RADIUS)
 	private double knockupSelfRange;
 
 	public EarthShard(Player player) {
@@ -180,7 +182,12 @@ public class EarthShard extends EarthAbility implements AddonAbility {
 			} else {
 				if (!allowKnockup) continue;
 				if (entity.getLocation().distance(originLoc) <= knockupRange) {
-					entity.setVelocity(entity.getVelocity().add(new Vector(0, knockupVelocity, 0)));
+					Vector velocity = entity.getVelocity().add(new Vector(0, knockupVelocity, 0));
+					if (entity instanceof LivingEntity) {
+						GeneralMethods.setVelocity(this, entity, velocity);
+					} else {
+						entity.setVelocity(velocity);
+					}
 				}
 			}
 		}

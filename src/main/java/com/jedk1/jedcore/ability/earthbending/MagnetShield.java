@@ -251,7 +251,7 @@ public class MagnetShield extends MetalAbility implements AddonAbility {
 
 				if (isMetal) {
 					Vector direction = GeneralMethods.getDirection(player.getLocation(), e.getLocation()).multiply(velocity);
-					livingEntity.setVelocity(direction);
+					GeneralMethods.setVelocity(this, livingEntity, direction);
 				}
 			}
 		}

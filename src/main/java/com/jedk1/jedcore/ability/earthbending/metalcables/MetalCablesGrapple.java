@@ -13,6 +13,7 @@ public class MetalCablesGrapple extends MetalCablesSubAbility {
 	private double range;
 	@Attribute(Attribute.SPEED)
 	private double speed;
+	@Attribute(Attribute.SELF_PUSH)
 	private double pullSpeed;
 	private double maxSwingAngle;
 

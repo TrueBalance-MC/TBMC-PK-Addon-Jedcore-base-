@@ -19,6 +19,7 @@ public class Meditate extends SpiritualAbility implements AddonAbility {
 
 	private double startHealth;
 	private String unfocusMsg;
+	@Attribute(Attribute.CHARGE_DURATION)
 	private long warmup;
 	private int particleDensity;
 	private boolean lossFocusMessage;

@@ -67,6 +67,7 @@ public class EarthLine extends EarthAbility implements AddonAbility {
 		goOnAfterHit = 1;
 
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is selected
 
 		if (prepare()) {
 			start();

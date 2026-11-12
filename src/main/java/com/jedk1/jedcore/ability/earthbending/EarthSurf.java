@@ -241,7 +241,7 @@ public class EarthSurf extends EarthAbility implements AddonAbility {
 				
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(loc.clone().add(0, -2.9, 0).toVector().add(location.clone().getDirection().multiply(distOffset)).toLocation(player.getWorld()), 1.5D)) {
 					if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
-						e.setVelocity(new Vector(0, 0.3, 0));
+						GeneralMethods.setVelocity(this, e, new Vector(0, 0.3, 0));
 					}
 				}
 			}

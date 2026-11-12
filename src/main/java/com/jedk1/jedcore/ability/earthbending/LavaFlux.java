@@ -36,7 +36,7 @@ import java.util.Random;
 
 public class LavaFlux extends LavaAbility implements AddonAbility {
 
-	@Attribute(Attribute.SPEED)
+	@Attribute("StepInterval") // Ticks between steps, so higher is slower; not a speed jing should raise
 	private int speed;
 	@Attribute(Attribute.RANGE)
 	private int range;
@@ -233,7 +233,7 @@ public class LavaFlux extends LavaAbility implements AddonAbility {
 				Vector direction = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
 				Vector knockbackVelocity = direction.multiply(knockBack).setY(knockUp);
 
-				livingEntity.setVelocity(knockbackVelocity);
+				GeneralMethods.setVelocity(this, livingEntity, knockbackVelocity);
 			}
 		}
 	}

@@ -53,8 +53,6 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 	@Attribute("Length")
 	private long trail; //80
 	private boolean avatar; //true
-	private boolean stayAtSource; //true
-	private int stayRange; //100
 	private boolean fullMoonEnabled;
 	private int fullMoonCooldown;
 	private int fullMoonDuration;
@@ -150,8 +148,6 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 		trail = config.getInt("Abilities.Water.WaterCombo.WaterFlow.Trail");
 		avatar = config.getBoolean("Abilities.Water.WaterCombo.WaterFlow.IsAvatarStateToggle");
 		avatarDuration = config.getLong("Abilities.Water.WaterCombo.WaterFlow.AvatarStateDuration");
-		stayAtSource = config.getBoolean("Abilities.Water.WaterCombo.WaterFlow.PlayerStayNearSource");
-		stayRange = config.getInt("Abilities.Water.WaterCombo.WaterFlow.MaxDistanceFromSource");
 		canUseBottle = config.getBoolean("Abilities.Water.WaterCombo.WaterFlow.BottleSource");
 		canUsePlants = config.getBoolean("Abilities.Water.WaterCombo.WaterFlow.PlantSource");
 		removeOnAnyDamage = config.getBoolean("Abilities.Water.WaterCombo.WaterFlow.RemoveOnAnyDamage");
@@ -241,7 +237,7 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 			remove();
 			return;
 		}
-		if ((stayAtSource && player.getLocation().distance(origin) >= stayRange) || head.getY() > head.getWorld().getMaxHeight() || head.getY() < head.getWorld().getMinHeight()) {
+		if (head.getY() > head.getWorld().getMaxHeight() || head.getY() < head.getWorld().getMinHeight()) {
 			remove();
 			return;
 		}
@@ -252,6 +248,11 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 		if (AirAbility.isWithinAirShield(head)) {
 			remove();
 			return;
+		}
+		// Riding your own flow keeps your head underwater, so without this you'd start drowning after ~15 seconds
+		// and the drowning damage would end the flow below, regardless of the configured duration.
+		if (playerRideOwnFlow && directions.containsKey(player.getEyeLocation().getBlock())) {
+			player.setRemainingAir(player.getMaximumAir());
 		}
 		if (prevHealth > player.getHealth()) {
 			remove();
@@ -526,22 +527,6 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 
 	public void setAvatar(boolean avatar) {
 		this.avatar = avatar;
-	}
-
-	public boolean isStayAtSource() {
-		return stayAtSource;
-	}
-
-	public void setStayAtSource(boolean stayAtSource) {
-		this.stayAtSource = stayAtSource;
-	}
-
-	public int getStayRange() {
-		return stayRange;
-	}
-
-	public void setStayRange(int stayRange) {
-		this.stayRange = stayRange;
 	}
 
 	public boolean isFullMoonEnabled() {

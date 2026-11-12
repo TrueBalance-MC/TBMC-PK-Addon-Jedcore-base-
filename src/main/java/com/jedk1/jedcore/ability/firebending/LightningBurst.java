@@ -32,8 +32,10 @@ public class LightningBurst extends LightningAbility implements AddonAbility {
 	Random rand = new Random();
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown, avatarCooldown;
+	// Only chargeUp is an attribute: the AvatarState value is copied into it before the ability starts
 	@Attribute(Attribute.CHARGE_DURATION)
-	private long chargeUp, avatarChargeup;
+	private long chargeUp;
+	private long avatarChargeup;
 	@Attribute(Attribute.DAMAGE)
 	private double damage;
 	@Attribute(Attribute.RADIUS)

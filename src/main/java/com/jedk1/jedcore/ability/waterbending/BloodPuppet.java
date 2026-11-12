@@ -44,6 +44,7 @@ public class BloodPuppet extends BloodAbility implements AddonAbility {
 	private boolean bloodPuppetThroughBlocks;
 	private boolean requireBound;
 	private boolean affectBloodbenders;
+	@Attribute(Attribute.SELECT_RANGE)
 	private int distance;
 	@Attribute(Attribute.DURATION)
 	private long holdTime;
@@ -64,6 +65,7 @@ public class BloodPuppet extends BloodAbility implements AddonAbility {
 		}
 
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the hold time and grab range are used
 		endTime = System.currentTimeMillis() + holdTime;
 
 		if (grab()) {
@@ -262,7 +264,7 @@ public class BloodPuppet extends BloodAbility implements AddonAbility {
 				continue;
 
 			if (e instanceof LivingEntity living) {
-				living.damage(damage, puppet);
+				DamageHandler.damageEntity(living, damage, this);
 				if (e instanceof Creature creature)
 					creature.setTarget(puppet);
 			}
@@ -313,9 +315,9 @@ public class BloodPuppet extends BloodAbility implements AddonAbility {
 		dz = location.getZ() - newLocation.getZ();
 		Vector vector = new Vector(dx, dy, dz);
 		if (distance > .5) {
-			puppet.setVelocity(vector.normalize().multiply(.5));
+			GeneralMethods.setVelocity(this, puppet, vector.normalize().multiply(.5));
 		} else {
-			puppet.setVelocity(new Vector(0, 0, 0));
+			GeneralMethods.setVelocity(this, puppet, new Vector(0, 0, 0));
 		}
 		puppet.setFallDistance(0);
 		if (puppet instanceof Creature) {

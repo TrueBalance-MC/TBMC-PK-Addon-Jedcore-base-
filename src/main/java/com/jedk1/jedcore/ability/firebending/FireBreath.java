@@ -44,7 +44,7 @@ public class FireBreath extends FireAbility implements AddonAbility {
 	private double playerDamage;
 	@Attribute("Mob" + Attribute.DAMAGE)
 	private double mobDamage;
-	@Attribute(Attribute.DURATION)
+	@Attribute(Attribute.FIRE_TICK)
 	private int fireDuration;
 	@Attribute(Attribute.RANGE)
 	private int range;

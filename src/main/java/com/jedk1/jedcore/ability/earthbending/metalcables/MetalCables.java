@@ -52,6 +52,7 @@ public class MetalCables extends MetalAbility implements AddonAbility, MultiAbil
 	private final Set<Material> leggingsTypes = EnumSet.noneOf(Material.class);
 	private final Set<Material> bootsTypes = EnumSet.noneOf(Material.class);
 	private final Set<Material> handTypes = EnumSet.noneOf(Material.class);
+	@Attribute(Attribute.SELF_PUSH)
 	private double grapplePullSpeed;
 	private int grabUsePoints;
 	private int slamUsePoints;

@@ -44,7 +44,7 @@ public class SonicBlast extends AirAbility implements AddonAbility {
 	private double entityCollisionRadius;
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
-	@Attribute("WarmUp")
+	@Attribute(Attribute.CHARGE_DURATION)
 	private long warmup;
 
 	public SonicBlast(Player player) {

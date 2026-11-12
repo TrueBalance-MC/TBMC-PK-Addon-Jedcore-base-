@@ -63,6 +63,7 @@ public class LavaThrow extends LavaAbility implements AddonAbility {
 		}
 
 		setFields();
+		recalculateAttributes(); // Apply attribute changes before the source is selected
 
 		location = player.getLocation();
 		location.setPitch(0);

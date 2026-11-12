@@ -4,6 +4,7 @@ import com.jedk1.jedcore.JedCore;
 import com.jedk1.jedcore.collision.CollisionDetector;
 import com.jedk1.jedcore.collision.Sphere;
 import com.jedk1.jedcore.configuration.JedCoreConfig;
+import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
@@ -162,7 +163,7 @@ public class AirBlade extends AirAbility implements AddonAbility {
 
 			if (knockback > 0) {
 				Vector knockDir = entity.getLocation().toVector().subtract(location.toVector()).normalize();
-				entity.setVelocity(entity.getVelocity().add(knockDir.multiply(knockback)));
+				GeneralMethods.setVelocity(this, entity, entity.getVelocity().add(knockDir.multiply(knockback)));
 			}
 
 			remove();
