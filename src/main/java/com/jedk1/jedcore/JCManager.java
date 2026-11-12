@@ -2,6 +2,7 @@ package com.jedk1.jedcore;
 
 import com.jedk1.jedcore.ability.waterbending.IceWall;
 import com.jedk1.jedcore.ability.firebending.LightningBurst;
+import com.jedk1.jedcore.ability.waterbending.BloodRipSource;
 import com.jedk1.jedcore.ability.waterbending.HealingWaters;
 import com.jedk1.jedcore.ability.waterbending.passive.IcePassive;
 import com.jedk1.jedcore.util.RegenTempBlock;
@@ -23,6 +24,7 @@ public class JCManager implements Runnable {
 		IcePassive.handleSkating();
 		IceWall.progressAll();
 		ThrownEntityTracker.updateAll();
+		BloodRipSource.updateAll();
 		
 		RegenTempBlock.manage();
 	}

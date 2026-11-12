@@ -200,6 +200,37 @@ public class JedCoreConfig {
 		config.addDefault("Abilities.Air.Meditate.SpeedBoost", 3);
 		config.addDefault("Abilities.Air.Meditate.JumpBoost", 3);
 		
+		config.addDefault("Abilities.Air.SpiritualProjection.Enabled", true);
+		config.addDefault("Abilities.Air.SpiritualProjection.Description", "Spiritual Projection lets you focus your spiritual energy into attack, "
+				+ "defense or mobility. Each mode costs spiritual energy, which is recharged by meditating. Left-click to begin, "
+				+ "then sneak on a hotbar slot to use that mode.\n"
+				+ "Meditate: Hold Sneak to recharge your spiritual energy.\n"
+				+ "Spirit: Tap Sneak while standing on solid ground to leave your body and roam as a spirit. Left-click to return to your body.\n"
+				+ "AstralAttack: Sneak to send out an astral projection that damages the first creature it touches. Keep sneaking to steer it with your view.\n"
+				+ "SpiritualDrain: Hold Sneak to drain the spiritual energy of nearby players. Drained players can't bend for a while, and draining them heals you.\n"
+				+ "Exit: Tap Sneak to leave Spiritual Projection.");
+		config.addDefault("Abilities.Air.SpiritualProjection.Cooldown", 30000);
+		config.addDefault("Abilities.Air.SpiritualProjection.MaxEnergy", 100);
+		config.addDefault("Abilities.Air.SpiritualProjection.Meditate.Cooldown", 6000);
+		config.addDefault("Abilities.Air.SpiritualProjection.Meditate.Duration", 10000);
+		config.addDefault("Abilities.Air.SpiritualProjection.Meditate.EnergyPerTick", 1);
+		config.addDefault("Abilities.Air.SpiritualProjection.Spirit.Cooldown", 5000);
+		config.addDefault("Abilities.Air.SpiritualProjection.Spirit.Duration", 60000);
+		config.addDefault("Abilities.Air.SpiritualProjection.Spirit.Energy", 20);
+		config.addDefault("Abilities.Air.SpiritualProjection.AstralAttack.Cooldown", 3000);
+		config.addDefault("Abilities.Air.SpiritualProjection.AstralAttack.Duration", 6000);
+		config.addDefault("Abilities.Air.SpiritualProjection.AstralAttack.Speed", 0.8);
+		config.addDefault("Abilities.Air.SpiritualProjection.AstralAttack.Damage", 6.0);
+		config.addDefault("Abilities.Air.SpiritualProjection.AstralAttack.Knockback", 4.0);
+		config.addDefault("Abilities.Air.SpiritualProjection.AstralAttack.HitRadius", 2.0);
+		config.addDefault("Abilities.Air.SpiritualProjection.AstralAttack.Energy", 35);
+		config.addDefault("Abilities.Air.SpiritualProjection.SpiritualDrain.Cooldown", 15000);
+		config.addDefault("Abilities.Air.SpiritualProjection.SpiritualDrain.Range", 20);
+		config.addDefault("Abilities.Air.SpiritualProjection.SpiritualDrain.DrainSpeed", 0.8);
+		config.addDefault("Abilities.Air.SpiritualProjection.SpiritualDrain.DrainedDuration", 5500);
+		config.addDefault("Abilities.Air.SpiritualProjection.SpiritualDrain.Energy", 45);
+		config.addDefault("Abilities.Air.SpiritualProjection.SpiritualDrain.HealAmount", 2.0);
+
 		config.addDefault("Abilities.Air.SonicBlast.Enabled", true);
 		config.addDefault("Abilities.Air.SonicBlast.Description", "SonicBlast is a soundbending ability, known by very few airbenders. "
 			+ "It allows the airbender to stun and deafen an opponent by creating a sonic blast. "
@@ -799,6 +830,21 @@ public class JedCoreConfig {
 		config.addDefault("Abilities.Water.Bloodbending.HoldTime", 10000);
 		config.addDefault("Abilities.Water.Bloodbending.Cooldown", 4000);
 
+		config.addDefault("Abilities.Water.BloodRip.Enabled", true);
+		config.addDefault("Abilities.Water.BloodRip.Description", "BloodRip is a very dark Bloodbending move. Hold Sneak while looking at a player "
+				+ "or a mob to charge up the move, then release Sneak (or Left-Click) to rip the blood out of them. Healthier targets take longer "
+				+ "to charge. If you kill them, their blood is left behind for a short time and can be bent like water.");
+		config.addDefault("Abilities.Water.BloodRip.Cooldown", 10000);
+		config.addDefault("Abilities.Water.BloodRip.Range", 8.0);
+		config.addDefault("Abilities.Water.BloodRip.ChargeTime", 5000);
+		config.addDefault("Abilities.Water.BloodRip.MaxDamage", 12.0);
+		config.addDefault("Abilities.Water.BloodRip.CanKill", true);
+		config.addDefault("Abilities.Water.BloodRip.NightOnly", false);
+		config.addDefault("Abilities.Water.BloodRip.FullMoonOnly", false);
+		config.addDefault("Abilities.Water.BloodRip.UndeadMobs", true);
+		config.addDefault("Abilities.Water.BloodRip.BloodSource.Enabled", true);
+		config.addDefault("Abilities.Water.BloodRip.BloodSource.Duration", 5000);
+
 		config.addDefault("Abilities.Water.BloodPuppet.Enabled", true);
 		config.addDefault("Abilities.Water.BloodPuppet.Description", "This very high-level bloodbending ability lets "
 				+ "a master control entities' limbs, forcing them to "
@@ -1056,6 +1102,7 @@ public class JedCoreConfig {
 		lang.addDefault("Abilities.Fire.LightningBurst.DeathMessage", "{victim} crackled out of existence from {attacker}'s {ability}");
 
 		//Water
+		lang.addDefault("Abilities.Water.BloodRip.DeathMessage", "{victim} was purged by {attacker}'s {ability}");
 		lang.addDefault("Abilities.Water.Drain.DeathMessage", "{victim} was blasted by {attacker}'s {ability}");
 		lang.addDefault("Abilities.Water.IceClaws.DeathMessage", "{victim} was ripped to shreds by {attacker}'s {ability}");
 		lang.addDefault("Abilities.Water.IceWall.DeathMessage", "{victim} was collateral to {attacker}'s exploding {ability}");
@@ -1079,6 +1126,7 @@ public class JedCoreConfig {
 		//Air
 		lang.addDefault("Abilities.Air.AirBlade.DeathMessage", "{victim} was sliced in two by {attacker}'s {ability}");
 		lang.addDefault("Abilities.Air.AirPunch.DeathMessage", "{victim} was exploded by {attacker}'s {ability}");
+		lang.addDefault("Abilities.Air.AstralAttack.DeathMessage", "{victim} was struck down by {attacker}'s {ability}");
 		lang.addDefault("Abilities.Air.SonicBlast.DeathMessage", "{victim}'s ears burst after {attacker}'s {ability}");
 
 		//Chi

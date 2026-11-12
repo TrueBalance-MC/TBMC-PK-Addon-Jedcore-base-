@@ -12,6 +12,7 @@ import com.jedk1.jedcore.util.versionadapter.PotionEffectAdapter;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.jedk1.jedcore.ability.waterbending.BloodRipSource;
 import com.jedk1.jedcore.command.Commands;
 import com.jedk1.jedcore.configuration.JedCoreConfig;
 import com.jedk1.jedcore.listener.AbilityListener;
@@ -105,6 +106,7 @@ public class JedCore extends JavaPlugin {
 	
 	public void onDisable() {
 		RegenTempBlock.revertAll();
+		BloodRipSource.removeAll();
 	}
 
 	public static void logDebug(String message) {

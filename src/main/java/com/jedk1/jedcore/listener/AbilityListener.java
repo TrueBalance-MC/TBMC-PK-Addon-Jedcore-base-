@@ -6,6 +6,8 @@ import com.jedk1.jedcore.ability.airbending.AirGlide;
 import com.jedk1.jedcore.ability.airbending.AirPunch;
 import com.jedk1.jedcore.ability.airbending.Meditate;
 import com.jedk1.jedcore.ability.airbending.SonicBlast;
+import com.jedk1.jedcore.ability.airbending.spiritualprojection.SpiritForm;
+import com.jedk1.jedcore.ability.airbending.spiritualprojection.SpiritualProjection;
 import com.jedk1.jedcore.ability.avatar.SpiritBeam;
 import com.jedk1.jedcore.ability.avatar.elementsphere.ElementSphere;
 import com.jedk1.jedcore.ability.chiblocking.DaggerThrow;
@@ -38,6 +40,7 @@ import com.jedk1.jedcore.ability.firebending.FireSki;
 import com.jedk1.jedcore.ability.firebending.LightningBurst;
 import com.jedk1.jedcore.ability.passive.WallRun;
 import com.jedk1.jedcore.ability.waterbending.BloodPuppet;
+import com.jedk1.jedcore.ability.waterbending.BloodRip;
 import com.jedk1.jedcore.ability.waterbending.Drain;
 import com.jedk1.jedcore.ability.waterbending.IceClaws;
 import com.jedk1.jedcore.ability.waterbending.IceWall;
@@ -240,6 +243,8 @@ public class AbilityListener implements Listener {
 					new ElementSphere(player);
 				} else if (abil.equalsIgnoreCase("MetalCables")) {
 					MetalCables.activate(player);
+				} else if (abil.equalsIgnoreCase("SpiritualProjection")) {
+					SpiritualProjection.click(player);
 				}
 			}
 			return;
@@ -259,6 +264,9 @@ public class AbilityListener implements Listener {
 				}
 				if (abilClass.equals(AirPunch.class)) {
 					new AirPunch(player);
+				}
+				if (abilClass.equals(SpiritualProjection.class)) {
+					new SpiritualProjection(player);
 				}
 			}
 
@@ -347,6 +355,9 @@ public class AbilityListener implements Listener {
 				if (abilClass.equals(BloodPuppet.class)) {
 					BloodPuppet.attack(player);
 				}
+				if (abilClass.equals(BloodRip.class)) {
+					BloodRip.rip(player);
+				}
 				if (abilClass.equals(IceClaws.class)) {
 					IceClaws.throwClaws(player);
 				}
@@ -402,6 +413,11 @@ public class AbilityListener implements Listener {
 
 		if (MovementHandler.isStopped(player) || Bloodbending.isBloodbent(player)) {
 			event.setCancelled(true);
+			return;
+		}
+
+		if (!player.isSneaking() && MultiAbilityManager.hasMultiAbilityBound(player, "SpiritualProjection")) {
+			SpiritualProjection.activate(player);
 			return;
 		}
 
@@ -532,6 +548,9 @@ public class AbilityListener implements Listener {
 				if (abilClass.equals(BloodPuppet.class)) {
 					new BloodPuppet(player);
 				}
+				if (abilClass.equals(BloodRip.class)) {
+					new BloodRip(player);
+				}
 				if (abilClass.equals(IceClaws.class)) {
 					new IceClaws(player);
 					IceClaws.swapHands(player);
@@ -561,6 +580,13 @@ public class AbilityListener implements Listener {
 		if (event.getDamager() instanceof Player player && BloodPuppet.isPuppetOf(player, event.getEntity())) {
 			event.setCancelled(true);
 			BloodPuppet.attack(player);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public void onSpiritAttack(EntityDamageByEntityEvent event) {
+		if (event.getDamager() instanceof Player player && SpiritForm.isSpirit(player)) {
+			event.setCancelled(true);
 		}
 	}
 

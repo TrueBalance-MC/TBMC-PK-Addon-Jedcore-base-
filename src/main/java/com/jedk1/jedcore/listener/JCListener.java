@@ -11,6 +11,10 @@ import com.jedk1.jedcore.ability.earthbending.MetalShred;
 import com.jedk1.jedcore.ability.earthbending.MudSurge;
 import com.jedk1.jedcore.ability.earthbending.combo.MagmaBlast;
 import com.jedk1.jedcore.ability.earthbending.metalcables.MetalCablesGrab;
+import com.jedk1.jedcore.ability.airbending.spiritualprojection.SpiritForm;
+import com.jedk1.jedcore.ability.airbending.spiritualprojection.SpiritualDrain;
+import com.jedk1.jedcore.ability.airbending.spiritualprojection.SpiritualProjection;
+import com.jedk1.jedcore.ability.waterbending.BloodRip;
 import com.jedk1.jedcore.ability.firebending.FirePunch;
 import com.jedk1.jedcore.ability.firebending.FireSki;
 import com.jedk1.jedcore.ability.waterbending.IceClaws;
@@ -45,6 +49,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import net.kyori.adventure.text.Component;
@@ -63,7 +68,9 @@ public class JCListener implements Listener {
 		if (event.isCancelled()) return;
 
 		Player abilityPlayer = event.getAbility().getPlayer();
-		if (abilityPlayer != null && !MetalCablesGrab.canUseWhileGrabbed(abilityPlayer, event.getAbility())) {
+		if (abilityPlayer != null && (!MetalCablesGrab.canUseWhileGrabbed(abilityPlayer, event.getAbility())
+				|| !SpiritualDrain.canUseWhileDrained(abilityPlayer, event.getAbility())
+				|| !SpiritForm.canUseWhileSpirit(abilityPlayer, event.getAbility()))) {
 			event.setCancelled(true);
 			return;
 		}
@@ -107,6 +114,18 @@ public class JCListener implements Listener {
 		if (MudSurge.onFallDamage(player)) {
 			event.setCancelled(true);
 		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onBloodbenderDamaged(EntityDamageEvent event) {
+		if (event.getEntity() instanceof Player player) {
+			BloodRip.interrupt(player);
+		}
+	}
+
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		SpiritualProjection.clearEnergy(event.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
