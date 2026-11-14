@@ -34,7 +34,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -75,9 +77,16 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 	private Block sourceBlock;
 	private boolean frozen;
 	private double prevHealth;
+	@Attribute("Head" + Attribute.RADIUS) // Set before start() and only read after, so start() scales the final size
 	private int headSize;
 	private boolean usingBottle;
 	private final ConcurrentHashMap<Block, Location> directions = new ConcurrentHashMap<>();
+
+	// Riding: how far behind the head the rider is kept, how strongly they're pulled back there when they lag, and the
+	// fastest they can be moved while catching up.
+	private static final double RIDE_DISTANCE_BEHIND_HEAD = 1.5;
+	private static final double RIDE_CATCH_UP_FACTOR = 0.35;
+	private static final double RIDE_MAX_SPEED = 2.0;
 	private final List<Block> blocks = new ArrayList<>();
 
 	Random rand = new Random();
@@ -285,6 +294,8 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 		int pos = 0;
 		int ids = 0;
 		List<Block> tempList = new ArrayList<>(blocks);
+		// Each entity is pushed once per tick, by the block nearest the head that it's touching.
+		Map<Entity, Location> pushTargets = new HashMap<>();
 		for (Block block : tempList) {
 
 			for (Entity entity : GeneralMethods.getEntitiesAroundPoint(block.getLocation(), 2.8)) {
@@ -304,10 +315,11 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 				if (RegionProtection.isRegionProtected(this, entity.getLocation()) || (isPlayer && Commands.invincible.contains(entity.getName()))) {
 					continue;
 				}
-				Location temp = directions.get(block);
-				Vector dir = GeneralMethods.getDirection(entity.getLocation(), directions.get(block).add(temp.getDirection().multiply(1.5)));
-				GeneralMethods.setVelocity(this, entity, dir.clone().normalize().multiply(1));
-				entity.setFallDistance(0f);
+				Location blockHead = directions.get(block);
+				if (blockHead != null) {
+					// Clone so the stored location doesn't drift forward every time it pushes something.
+					pushTargets.put(entity, blockHead.clone().add(blockHead.getDirection().multiply(1.5)));
+				}
 			}
 
 			if (!MaterialUtil.isTransparent(block) || RegionProtection.isRegionProtected(player, block.getLocation(), "Torrent")) {
@@ -326,6 +338,18 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 				ids++;
 			}
 		}
+		for (Map.Entry<Entity, Location> push : pushTargets.entrySet()) {
+			Entity entity = push.getKey();
+			Vector velocity;
+			if (entity.getEntityId() == player.getEntityId()) {
+				velocity = getRiderVelocity();
+			} else {
+				velocity = GeneralMethods.getDirection(entity.getLocation(), push.getValue()).normalize();
+			}
+			GeneralMethods.setVelocity(this, entity, velocity);
+			entity.setFallDistance(0f);
+		}
+
 		for (int i = 0; i < ids; i++) {
 			if (i >= blocks.size()) {
 				break;
@@ -338,6 +362,22 @@ public class WaterFlow extends WaterAbility implements AddonAbility, ComboAbilit
 			}
 		}
 		tempList.clear();
+	}
+
+	/**
+	 * Keeps the user riding just behind the head of their own flow. The head advances one block per tick, so the rider
+	 * moves at that speed plus a correction towards the riding point that grows the further they've fallen behind.
+	 * Without the correction any lag (latency, water drag, clipping a block) builds up until they fall out of the flow.
+	 */
+	private Vector getRiderVelocity() {
+		Vector headVelocity = head.getDirection().normalize();
+		Location ridePoint = head.clone().subtract(headVelocity.clone().multiply(RIDE_DISTANCE_BEHIND_HEAD)).subtract(0, 1, 0);
+		Vector correction = ridePoint.toVector().subtract(player.getLocation().toVector()).multiply(RIDE_CATCH_UP_FACTOR);
+		Vector velocity = headVelocity.add(correction);
+		if (velocity.length() > RIDE_MAX_SPEED) {
+			velocity.normalize().multiply(RIDE_MAX_SPEED);
+		}
+		return velocity;
 	}
 
 	private void moveWater() {

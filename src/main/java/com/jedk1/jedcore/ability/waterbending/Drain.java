@@ -54,6 +54,7 @@ public class Drain extends WaterAbility implements AddonAbility {
 	private int absorbRate; // 6
 	private int holdRange; // 2
 	private boolean blastsEnabled; // true
+	@Attribute("Blast" + Attribute.COUNT)
 	private int maxBlasts;
 	private boolean keepSrc; // false
 	private boolean useRain;

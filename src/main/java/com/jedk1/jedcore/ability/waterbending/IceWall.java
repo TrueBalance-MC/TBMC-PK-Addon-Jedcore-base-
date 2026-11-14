@@ -34,6 +34,7 @@ public class IceWall extends IceAbility implements AddonAbility {
 
 	@Attribute(Attribute.HEIGHT)
 	private int maxHeight;
+	@Attribute("Min" + Attribute.HEIGHT)
 	private int minHeight;
 
 	@Attribute(Attribute.WIDTH)
@@ -75,6 +76,8 @@ public class IceWall extends IceAbility implements AddonAbility {
 
 	private boolean rising = false;
 	private long lastDamageTime = 0;
+	@Attribute("Life" + Attribute.DURATION)
+	private long lifeDuration; // This wall's copy of lifetimeTime, so jing can lengthen it per player
 	private long lifetime = 0;
 	private int wallHealth;
 	private int tankedDamage;
@@ -91,6 +94,7 @@ public class IceWall extends IceAbility implements AddonAbility {
 		}
 
 		setFields();
+		this.recalculateAttributes(); // The wall's size and lifetime are used below, before start()
 		Block b = getSourceBlock(player, (int) (range * getNightFactor(player.getWorld())));
 		if (b == null) return;
 
@@ -105,7 +109,7 @@ public class IceWall extends IceAbility implements AddonAbility {
 
 		wallHealth = (int) (((rand.nextInt((maxHealth - minHealth) + 1)) + minHealth) * getNightFactor(player.getWorld()));
 		loadAffectedBlocks(player, b);
-		lifetime = System.currentTimeMillis() + lifetimeTime;
+		lifetime = System.currentTimeMillis() + lifeDuration;
 		start();
 	}
 
@@ -124,6 +128,7 @@ public class IceWall extends IceAbility implements AddonAbility {
 		stackable = config.getBoolean("Abilities.Water.IceWall.Stackable");
 		lifetimeEnabled = config.getBoolean("Abilities.Water.IceWall.LifeTime.Enabled");
 		lifetimeTime = config.getLong("Abilities.Water.IceWall.LifeTime.Duration");
+		lifeDuration = lifetimeTime;
 		torrentDamage = config.getInt("Abilities.Water.IceWall.WallDamage.Torrent");
 		torrentFreezeDamage = config.getInt("Abilities.Water.IceWall.WallDamage.TorrentFreeze");
 		iceBlastDamage = config.getInt("Abilities.Water.IceWall.WallDamage.IceBlast");
