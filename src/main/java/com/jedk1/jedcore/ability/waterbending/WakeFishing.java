@@ -2,12 +2,14 @@ package com.jedk1.jedcore.ability.waterbending;
 
 import com.jedk1.jedcore.JedCore;
 import com.jedk1.jedcore.configuration.JedCoreConfig;
+import com.jedk1.jedcore.event.WakeFishingCatchEvent;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.WaterAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.region.RegionProtection;
 import com.projectkorra.projectkorra.util.TempBlock;
 
+import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -168,6 +170,14 @@ public class WakeFishing extends WaterAbility implements AddonAbility {
 		if (rand.nextInt(50) == 0) {
 			Material fishType = FISH_TYPES[rand.nextInt(FISH_TYPES.length)];
 			ItemStack fish = new ItemStack(fishType, 1);
+
+			// Lets other plugins change or cancel the catch
+			WakeFishingCatchEvent event = new WakeFishingCatchEvent(player, fish);
+			Bukkit.getPluginManager().callEvent(event);
+			if (event.isCancelled() || event.getFish() == null || event.getFish().isEmpty()) {
+				return;
+			}
+			fish = event.getFish();
 
 			Item item = player.getWorld().dropItemNaturally(focusedBlock.getLocation().clone().add(.5, 1.5, .5), fish);
 			Vector v = player.getEyeLocation().toVector().subtract(focusedBlock.getLocation().clone().add(.5, 1.5, .5).toVector());
